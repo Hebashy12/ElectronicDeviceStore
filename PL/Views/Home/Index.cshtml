@@ -1,0 +1,62 @@
+﻿@model PL.VMs.HomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1 class="section-title">Results</h1>
+<p class="section-subtitle">Check each product page for other buying options.</p>
+
+<!-- Search Bar & Category Filter -->
+<div class="search-container">
+    <div class="category-select">
+        <select id="categoryFilter" class="category-dropdown" onchange="filterProducts()">
+            <option value="all">All</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+    </div>
+    <input type="text" id="searchBar" class="search-input" placeholder="Search products..." onkeyup="filterProducts()">
+    <button class="search-button">🔍</button>
+</div>
+
+<!-- Product Listings -->
+@foreach (var category in Model.Categories)
+{
+    <div class="category-section" data-category="@category.Id">
+        <h2 class="category-title">@category.Name</h2>
+
+        <div class="product-container">
+            @if (Model.ProductsByCategory.ContainsKey(category.Id) && Model.ProductsByCategory[category.Id].Any())
+            {
+                @foreach (var product in Model.ProductsByCategory[category.Id])
+                {
+                    <!-- 🔹 Make Product Clickable -->
+                    <a asp-controller="Product" asp-action="ProductPage" asp-route-id="@product.Id" class="product-card-link">
+                        <div class="product-card" data-name="@product.Name" data-category="@category.Id">
+                            <span class="badge">Sponsored</span>
+                            <img src="/images/@product.ImageUrl" alt="@product.Name" class="product-image" />
+                            <h3 class="product-title">@product.Name</h3>
+                            <p class="product-description">
+                                @(product.Description.Length > 100 ? product.Description.Substring(0, 100) + "..." : product.Description)
+                            </p>
+                            <div class="rating">
+                                ⭐⭐⭐⭐☆ <span class="review-count">(120)</span>
+                            </div>
+                            <div class="price-container">
+                                <span class="price">$@product.Price</span>
+                                <span class="discount">List Price: <del>$@(product.Price * (decimal)1.2)</del></span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+            else
+            {
+                <p>No products available in this category.</p>
+            }
+        </div>
+    </div>
+}

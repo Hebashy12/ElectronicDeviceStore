@@ -1,0 +1,192 @@
+﻿@using BLL.DTOs
+@model ProductDTO;
+<div class="product-container">
+    <!-- Left Side: Product Image -->
+    <div class="product-image-container">
+        <img src="/images/@Model.ImageUrl" alt="Product Image" class="product-image">
+    </div>
+
+    <!-- Right Side: Product Details -->
+    <div class="product-details">
+        <h1 class="product-title">@Model.Name</h1>
+
+        <a href="#" class="store-link">Visit the BERIBES Store</a>
+
+        <div class="rating">
+            ⭐⭐⭐⭐⭐ 4.5 (37,329 ratings) <span class="amazon-choice">Amazon's Choice</span>
+        </div>
+
+        <p class="purchase-info">10K+ bought in the past month</p>
+
+        <p class="limited-deal">Limited Time Deal</p>
+
+        <div class="price">
+            <span class="current-price">$@Model.Price</span>
+        </div>
+
+        <p class="shipping-info">$27.03 Shipping & Import Fees Deposit to Egypt</p>
+        <p class="delivery-info">Delivery <strong>Thursday, April 3</strong>. Order within <span class="time-left">23 hrs 44 mins</span></p>
+
+        <p class="stock-status">✅ In Stock</p>
+
+        <label for="quantity">Quantity:</label>
+        <select id="quantity" class="quantity-dropdown">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+        </select>
+
+        <form asp-controller="Cart" asp-action="AddToCart" method="post">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="quantity" id="quantityInput" value="1" />
+
+            <button type="submit" class="btn btn-primary add-to-cart">Add to Cart</button>
+        </form>
+
+        <form asp-action="Checkout" asp-controller="Payment" asp-route-id="@Model.Id" method="post">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="quantity" id="quantityInput" value="1" />
+            <button type="submit" class="btn btn-success buy-now">Buy</button>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        gap: 20px;
+    }
+
+    .product-image-container {
+        flex: 1;
+        max-width: 500px;
+        text-align: center;
+        border-radius: 10px;
+    }
+
+    .product-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: contain; 
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        background-color: #f5f5f5; 
+    }
+
+
+        .product-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    .product-details {
+        flex: 1;
+        padding-left: 20px;
+        min-width: 300px;
+    }
+
+    .product-title {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .store-link {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+        .store-link:hover {
+            text-decoration: underline;
+        }
+
+    .rating {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .amazon-choice {
+        background: #232f3e;
+        color: white;
+        padding: 3px 8px;
+        font-size: 14px;
+        border-radius: 5px;
+    }
+
+    .limited-deal {
+        color: red;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .price {
+        font-size: 26px;
+        font-weight: bold;
+        color: #d9534f;
+        margin-bottom: 10px;
+    }
+
+    .discount {
+        background: red;
+        color: white;
+        padding: 5px 10px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .old-price {
+        font-size: 18px;
+        color: #777;
+        text-decoration: line-through;
+    }
+
+    .stock-status {
+        font-size: 18px;
+        color: green;
+        font-weight: bold;
+    }
+
+    .add-to-cart, .buy-now {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .add-to-cart {
+        background-color: #ffcc00;
+        color: #333;
+    }
+
+    .buy-now {
+        background-color: #ff9900;
+        color: white;
+    }
+
+    .add-to-cart:hover {
+        background-color: #e6b800;
+        transform: scale(1.02);
+    }
+
+    .buy-now:hover {
+        background-color: #cc7a00;
+        transform: scale(1.02);
+    }
+</style>
