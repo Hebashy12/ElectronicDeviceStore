@@ -2,6 +2,8 @@
 using BLL.Services.Absraction;
 using BLL.Services.Abstraction;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Stripe;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace PL.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToCart(int Id, int quantity = 1)
+        public async Task<IActionResult> AddToCart(int productId, int quantity = 1)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
@@ -27,10 +29,10 @@ namespace PL.Controllers
                 //return Unauthorized();
                 userId = "1";
             }
-            var product = await _productServices.GetbyId(Id);
+            var product = await _productServices.GetbyId(productId);
             var cartItemDto = new CardDTO
             {
-                ProductId = Id,
+                ProductId = productId,
                 Quantity = quantity,
                 UserId = userId,
                 Product=product
@@ -44,14 +46,14 @@ namespace PL.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
+            var userId = User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId?.Value))
             {
                 //return Unauthorized();
-                userId = "1";
+                return RedirectToAction(nameof(Account), nameof(Login));
             }
 
-            var cartItems = await _cardServices.GetCartItems(userId);
+            var cartItems = await _cardServices.GetCartItems(userId.Value);
             return View(cartItems);
         }
 

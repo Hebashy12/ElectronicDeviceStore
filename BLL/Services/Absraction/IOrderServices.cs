@@ -9,7 +9,7 @@ namespace BLL.Services.Absraction
 {
     public interface IOrderService
     {
-        void PlaceOrder(string userId);
+        Task PlaceOrder(string userId, int productId, decimal totalAmount);
         List<OrderDTO> GetOrdersByUser(string userId);
         OrderDTO GetOrderById(int orderId);
         void UpdateOrder(OrderDTO orderDTO);

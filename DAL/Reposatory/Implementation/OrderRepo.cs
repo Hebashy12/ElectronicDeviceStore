@@ -36,7 +36,7 @@ namespace DAL.Reposatory.Implementation
         {
             return _context.Orders
                            .Include(o => o.OrderItems)
-                           .FirstOrDefault(o => o.Id == orderId);
+                           .FirstOrDefault(o => o.ProductId == orderId);
         }
 
         public void UpdateOrder(Order order)

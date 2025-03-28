@@ -15,23 +15,26 @@ namespace BLL.Services.Implementation
     {
         private readonly IOrderRepo _orderRepo;
         private readonly ICardRepo _cardRepo;
+        private readonly IProductRepo _productRepo;
 
-        public OrderService(IOrderRepo orderRepo, ICardRepo cardRepo)
+        public OrderService(IOrderRepo orderRepo, ICardRepo cardRepo, IProductRepo productRepo)
         {
             _orderRepo = orderRepo;
             _cardRepo = cardRepo;
+            _productRepo = productRepo;
         }
 
-        public void PlaceOrder(string userId)
+        public async Task PlaceOrder(string userId, int productId, decimal totalAmount)
         {
-            var cartItems = _cardRepo.GetCartItems(userId).ToList();
-            if (!cartItems.Any()) return;
+            //var cartItems = _cardRepo.GetCartItems(userId).ToList();
+            //if (!cartItems.Any()) return;
 
             var order = new Order
             {
+                ProductId=productId,
                 UserId = userId,
-                TotalAmount = cartItems.Sum(c => c.Product.Price * c.Quantity),
-                OrderItems = cartItems.Select(c => c.Product).ToList(),
+                TotalAmount = totalAmount,
+                OrderItems = new List<Product> { await _productRepo.GetbyId(productId) },
                 OrderDate = DateTime.Now
             };
 
@@ -44,7 +47,7 @@ namespace BLL.Services.Implementation
 
             return orders.Select(o => new OrderDTO
             {
-                Id = o.Id,
+                ProductId = o.ProductId,
                 UserId = o.UserId,
                 OrderDate = o.OrderDate,
                 TotalAmount = o.TotalAmount,
@@ -65,7 +68,7 @@ namespace BLL.Services.Implementation
 
             return new OrderDTO
             {
-                Id = order.Id,
+                ProductId = order.ProductId,
                 UserId = order.UserId,
                 OrderDate = order.OrderDate,
                 TotalAmount = order.TotalAmount,
@@ -81,7 +84,7 @@ namespace BLL.Services.Implementation
 
         public void UpdateOrder(OrderDTO orderDTO)
         {
-            var order = _orderRepo.GetOrderById(orderDTO.Id);
+            var order = _orderRepo.GetOrderById(orderDTO.ProductId);
             if (order != null)
             {
                 order.TotalAmount = orderDTO.TotalAmount;

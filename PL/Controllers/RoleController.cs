@@ -5,7 +5,7 @@ using PL.ActionResults;
 
 namespace PL.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     
     public class RoleController : Controller
     {

@@ -3,6 +3,7 @@ using BLL.Services.Absraction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PL.Controllers
 {
@@ -17,18 +18,18 @@ namespace PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy(int id)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                //return RedirectToAction("Login", "Account");
-                userId = "1";
-            }
+        //public async Task<IActionResult> Buy(int id)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(userId))
+        //    {
+        //        //return RedirectToAction("Login", "Account");
+        //        userId = "1";
+        //    }
 
-            _orderService.PlaceOrder(userId);
-            return RedirectToAction("Index");
-        }
+        //    await _orderService.PlaceOrder(userId);
+        //    return RedirectToAction("Index");
+        //}
 
         public IActionResult Index()
         {
